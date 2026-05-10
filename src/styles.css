@@ -159,8 +159,8 @@
   height: 22px;
   border-radius: 9999px;
   background: white;
-  border: 2px solid var(--primary);
-  box-shadow: 0 4px 14px color-mix(in oklab, var(--primary) 35%, transparent), 0 0 0 0 color-mix(in oklab, var(--primary) 30%, transparent);
+  border: 2px solid var(--slider-color, var(--primary));
+  box-shadow: 0 4px 14px color-mix(in oklab, var(--slider-color, var(--primary)) 35%, transparent), 0 0 0 0 color-mix(in oklab, var(--primary) 30%, transparent);
   cursor: grab;
   transition: transform .15s ease, box-shadow .2s ease;
   margin-top: -10px;
@@ -170,19 +170,19 @@
   height: 22px;
   border-radius: 9999px;
   background: white;
-  border: 2px solid var(--primary);
-  box-shadow: 0 4px 14px color-mix(in oklab, var(--primary) 35%, transparent);
+  border: 2px solid var(--slider-color, var(--primary));
+  box-shadow: 0 4px 14px color-mix(in oklab, var(--slider-color, var(--primary)) 35%, transparent);
   cursor: grab;
   transition: transform .15s ease, box-shadow .2s ease;
 }
 .score-slider:hover::-webkit-slider-thumb,
 .score-slider:focus::-webkit-slider-thumb {
   transform: scale(1.12);
-  box-shadow: 0 6px 22px color-mix(in oklab, var(--primary) 50%, transparent), 0 0 0 6px color-mix(in oklab, var(--primary) 18%, transparent);
+  box-shadow: 0 6px 22px color-mix(in oklab, var(--slider-color, var(--primary)) 50%, transparent), 0 0 0 6px color-mix(in oklab, var(--slider-color, var(--primary)) 18%, transparent);
 }
 .score-slider:active::-webkit-slider-thumb { cursor: grabbing; transform: scale(1.18); }
 .score-slider:hover::-moz-range-thumb,
 .score-slider:focus::-moz-range-thumb {
   transform: scale(1.12);
-  box-shadow: 0 6px 22px color-mix(in oklab, var(--primary) 50%, transparent), 0 0 0 6px color-mix(in oklab, var(--primary) 18%, transparent);
+  box-shadow: 0 6px 22px color-mix(in oklab, var(--slider-color, var(--primary)) 50%, transparent), 0 0 0 6px color-mix(in oklab, var(--slider-color, var(--primary)) 18%, transparent);
 }
