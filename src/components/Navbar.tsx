@@ -17,18 +17,20 @@ export function Navbar() {
           </div>
           <span className="text-lg font-bold tracking-tight">ScoreLab</span>
         </Link>
-        <nav className="hidden items-center gap-8 text-sm font-medium text-muted-foreground md:flex">
-          <a href="#calculators" className="transition hover:text-foreground">Calculators</a>
-          <a href="#features" className="transition hover:text-foreground">Tools</a>
-          <a href="#" className="transition hover:text-foreground">Resources</a>
-          <a href="#" className="transition hover:text-foreground">About</a>
+        <nav className="hidden items-center gap-6 text-sm font-medium text-muted-foreground md:flex">
+          <Link to="/" className="transition hover:text-foreground" activeOptions={{ exact: true }} activeProps={{ className: "text-foreground" }}>Calculators</Link>
+          <Link to="/tools/compare" className="transition hover:text-foreground" activeProps={{ className: "text-foreground" }}>Compare</Link>
+          <Link to="/tools/college-credit" className="transition hover:text-foreground" activeProps={{ className: "text-foreground" }}>College Credit</Link>
+          <Link to="/tools/planner" className="transition hover:text-foreground" activeProps={{ className: "text-foreground" }}>Planner</Link>
+          <Link to="/tools/timer" className="transition hover:text-foreground" activeProps={{ className: "text-foreground" }}>Timer</Link>
         </nav>
-        <a
-          href="#calculators"
+        <Link
+          to="/"
+          hash="calculators"
           className="inline-flex items-center rounded-full bg-foreground px-4 py-2 text-sm font-semibold text-background shadow-soft transition hover:opacity-90"
         >
           Get started
-        </a>
+        </Link>
       </div>
     </motion.header>
   );

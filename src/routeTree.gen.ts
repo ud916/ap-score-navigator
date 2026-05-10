@@ -10,33 +10,102 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ToolsTimerRouteImport } from './routes/tools.timer'
+import { Route as ToolsPlannerRouteImport } from './routes/tools.planner'
+import { Route as ToolsCompareRouteImport } from './routes/tools.compare'
+import { Route as ToolsCollegeCreditRouteImport } from './routes/tools.college-credit'
+import { Route as CalculatorSlugRouteImport } from './routes/calculator.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolsTimerRoute = ToolsTimerRouteImport.update({
+  id: '/tools/timer',
+  path: '/tools/timer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsPlannerRoute = ToolsPlannerRouteImport.update({
+  id: '/tools/planner',
+  path: '/tools/planner',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsCompareRoute = ToolsCompareRouteImport.update({
+  id: '/tools/compare',
+  path: '/tools/compare',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsCollegeCreditRoute = ToolsCollegeCreditRouteImport.update({
+  id: '/tools/college-credit',
+  path: '/tools/college-credit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalculatorSlugRoute = CalculatorSlugRouteImport.update({
+  id: '/calculator/$slug',
+  path: '/calculator/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/calculator/$slug': typeof CalculatorSlugRoute
+  '/tools/college-credit': typeof ToolsCollegeCreditRoute
+  '/tools/compare': typeof ToolsCompareRoute
+  '/tools/planner': typeof ToolsPlannerRoute
+  '/tools/timer': typeof ToolsTimerRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/calculator/$slug': typeof CalculatorSlugRoute
+  '/tools/college-credit': typeof ToolsCollegeCreditRoute
+  '/tools/compare': typeof ToolsCompareRoute
+  '/tools/planner': typeof ToolsPlannerRoute
+  '/tools/timer': typeof ToolsTimerRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/calculator/$slug': typeof CalculatorSlugRoute
+  '/tools/college-credit': typeof ToolsCollegeCreditRoute
+  '/tools/compare': typeof ToolsCompareRoute
+  '/tools/planner': typeof ToolsPlannerRoute
+  '/tools/timer': typeof ToolsTimerRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/calculator/$slug'
+    | '/tools/college-credit'
+    | '/tools/compare'
+    | '/tools/planner'
+    | '/tools/timer'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/calculator/$slug'
+    | '/tools/college-credit'
+    | '/tools/compare'
+    | '/tools/planner'
+    | '/tools/timer'
+  id:
+    | '__root__'
+    | '/'
+    | '/calculator/$slug'
+    | '/tools/college-credit'
+    | '/tools/compare'
+    | '/tools/planner'
+    | '/tools/timer'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CalculatorSlugRoute: typeof CalculatorSlugRoute
+  ToolsCollegeCreditRoute: typeof ToolsCollegeCreditRoute
+  ToolsCompareRoute: typeof ToolsCompareRoute
+  ToolsPlannerRoute: typeof ToolsPlannerRoute
+  ToolsTimerRoute: typeof ToolsTimerRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +117,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tools/timer': {
+      id: '/tools/timer'
+      path: '/tools/timer'
+      fullPath: '/tools/timer'
+      preLoaderRoute: typeof ToolsTimerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/planner': {
+      id: '/tools/planner'
+      path: '/tools/planner'
+      fullPath: '/tools/planner'
+      preLoaderRoute: typeof ToolsPlannerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/compare': {
+      id: '/tools/compare'
+      path: '/tools/compare'
+      fullPath: '/tools/compare'
+      preLoaderRoute: typeof ToolsCompareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/college-credit': {
+      id: '/tools/college-credit'
+      path: '/tools/college-credit'
+      fullPath: '/tools/college-credit'
+      preLoaderRoute: typeof ToolsCollegeCreditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calculator/$slug': {
+      id: '/calculator/$slug'
+      path: '/calculator/$slug'
+      fullPath: '/calculator/$slug'
+      preLoaderRoute: typeof CalculatorSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CalculatorSlugRoute: CalculatorSlugRoute,
+  ToolsCollegeCreditRoute: ToolsCollegeCreditRoute,
+  ToolsCompareRoute: ToolsCompareRoute,
+  ToolsPlannerRoute: ToolsPlannerRoute,
+  ToolsTimerRoute: ToolsTimerRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
