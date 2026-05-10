@@ -1,37 +1,20 @@
 import { useMemo, useState } from "react";
-import { motion } from "framer-motion";
-import { Calculator as CalcIcon, RotateCcw, TrendingUp, Award, Target } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Calculator as CalcIcon, RotateCcw, TrendingUp, Award, Target, Sparkles } from "lucide-react";
 import type { Subject } from "@/data/subjects";
 import { calculate, type CalcResult } from "@/lib/scoring";
 import { AnimatedNumber } from "@/components/AnimatedNumber";
+import { ScoreSlider } from "@/components/ScoreSlider";
+import { RadialMeter } from "@/components/RadialMeter";
 
 type Props = { subject: Subject };
 
-const bandColor: Record<CalcResult["band"], string> = {
-  Excellent: "bg-accent-green/15 text-accent-green",
-  Good: "bg-accent-blue/15 text-accent-blue",
-  Borderline: "bg-accent-orange/15 text-accent-orange",
-  "At Risk": "bg-destructive/10 text-destructive",
+const bandStyle: Record<CalcResult["band"], { chip: string; color: string; label: string }> = {
+  Excellent: { chip: "bg-accent-green/20 text-accent-green border-accent-green/30", color: "var(--accent-green)", label: "Excellent" },
+  Good: { chip: "bg-accent-blue/20 text-accent-blue border-accent-blue/30", color: "var(--accent-blue)", label: "Strong" },
+  Borderline: { chip: "bg-accent-orange/20 text-accent-orange border-accent-orange/30", color: "var(--accent-orange)", label: "Average" },
+  "At Risk": { chip: "bg-destructive/15 text-destructive border-destructive/30", color: "var(--destructive)", label: "Risk Zone" },
 };
-
-function NumberInput({ value, onChange, max, label }: { value: number; onChange: (n: number) => void; max: number; label: string }) {
-  return (
-    <label className="flex flex-col gap-1.5">
-      <span className="text-xs font-medium text-muted-foreground">{label} <span className="text-muted-foreground/60">/ {max}</span></span>
-      <input
-        type="number"
-        min={0}
-        max={max}
-        value={Number.isFinite(value) ? value : 0}
-        onChange={(e) => {
-          const n = parseFloat(e.target.value);
-          onChange(Number.isFinite(n) ? Math.max(0, Math.min(max, n)) : 0);
-        }}
-        className="h-10 rounded-xl border border-border bg-background px-3 text-sm font-medium text-foreground shadow-soft transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring/30"
-      />
-    </label>
-  );
-}
 
 export function ScoreCalculator({ subject }: Props) {
   const s = subject.scoring;
@@ -43,6 +26,7 @@ export function ScoreCalculator({ subject }: Props) {
   });
 
   const result = useMemo(() => calculate(subject, state), [subject, state]);
+  const band = bandStyle[result.band];
 
   const reset = () => {
     if (s.kind === "ap") setState({ mcqCorrect: 0, frqScores: s.frqs.map(() => 0) });
@@ -57,16 +41,16 @@ export function ScoreCalculator({ subject }: Props) {
       <motion.section
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="lg:col-span-3 rounded-3xl border border-border bg-card p-6 shadow-soft sm:p-8"
+        className="lg:col-span-3 rounded-3xl border border-border bg-card/80 p-6 shadow-soft backdrop-blur-md sm:p-8"
       >
         <header className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-[oklch(0.32_0.18_270)] text-primary-foreground shadow-soft">
               <CalcIcon className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-foreground">Score Calculator</h2>
-              <p className="text-xs text-muted-foreground">Enter your raw section scores below.</p>
+              <h2 className="text-lg font-semibold text-foreground">Interactive Score Builder</h2>
+              <p className="text-xs text-muted-foreground">Drag the sliders or tap +/− to update instantly.</p>
             </div>
           </div>
           <button onClick={reset} className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium text-muted-foreground transition hover:text-foreground">
@@ -74,28 +58,28 @@ export function ScoreCalculator({ subject }: Props) {
           </button>
         </header>
 
-        <div className="mt-6 space-y-6">
+        <div className="mt-6 space-y-5">
           {s.kind === "ap" && (
             <>
-              <div>
-                <h3 className="mb-3 text-sm font-semibold text-foreground">Multiple Choice</h3>
-                <NumberInput
-                  label="Correct answers"
-                  max={s.mcq.count}
-                  value={state.mcqCorrect}
-                  onChange={(n) => setState((p: any) => ({ ...p, mcqCorrect: n }))}
-                />
-              </div>
+              <SectionTitle>Multiple Choice</SectionTitle>
+              <ScoreSlider
+                label="Correct answers"
+                max={s.mcq.count}
+                value={state.mcqCorrect}
+                onChange={(n) => setState((p: any) => ({ ...p, mcqCorrect: n }))}
+                accent="primary"
+              />
               {s.frqs.length > 0 && (
-                <div>
-                  <h3 className="mb-3 text-sm font-semibold text-foreground">Free Response</h3>
-                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                <>
+                  <SectionTitle>Free Response</SectionTitle>
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     {s.frqs.map((f, i) => (
-                      <NumberInput
+                      <ScoreSlider
                         key={f.name}
                         label={f.name}
                         max={f.max}
                         value={state.frqScores[i]}
+                        accent="accent-purple"
                         onChange={(n) =>
                           setState((p: any) => {
                             const next = [...p.frqScores];
@@ -106,27 +90,28 @@ export function ScoreCalculator({ subject }: Props) {
                       />
                     ))}
                   </div>
-                </div>
+                </>
               )}
             </>
           )}
 
           {s.kind === "sat" && (
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <NumberInput label="Reading & Writing correct" max={s.sections[0].count} value={state.rwCorrect} onChange={(n) => setState((p: any) => ({ ...p, rwCorrect: n }))} />
-              <NumberInput label="Math correct" max={s.sections[1].count} value={state.mathCorrect} onChange={(n) => setState((p: any) => ({ ...p, mathCorrect: n }))} />
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <ScoreSlider label="Reading & Writing correct" max={s.sections[0].count} value={state.rwCorrect} onChange={(n) => setState((p: any) => ({ ...p, rwCorrect: n }))} accent="accent-blue" />
+              <ScoreSlider label="Math correct" max={s.sections[1].count} value={state.mathCorrect} onChange={(n) => setState((p: any) => ({ ...p, mathCorrect: n }))} accent="accent-teal" />
             </div>
           )}
 
           {s.kind === "act" && (
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {s.sections.map((sec) => (
-                <NumberInput
+                <ScoreSlider
                   key={sec.id}
                   label={`${sec.name} correct`}
                   max={sec.count}
                   value={state[sec.id] ?? 0}
                   onChange={(n) => setState((p: any) => ({ ...p, [sec.id]: n }))}
+                  accent="accent-pink"
                 />
               ))}
             </div>
@@ -134,14 +119,17 @@ export function ScoreCalculator({ subject }: Props) {
 
           {s.kind === "regents" && (
             <>
-              <NumberInput label="Multiple choice correct" max={s.mcq.count} value={state.mcqCorrect} onChange={(n) => setState((p: any) => ({ ...p, mcqCorrect: n }))} />
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <SectionTitle>Multiple Choice</SectionTitle>
+              <ScoreSlider label="Correct answers" max={s.mcq.count} value={state.mcqCorrect} onChange={(n) => setState((p: any) => ({ ...p, mcqCorrect: n }))} accent="primary" />
+              <SectionTitle>Free Response</SectionTitle>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 {s.frqs.map((f, i) => (
-                  <NumberInput
+                  <ScoreSlider
                     key={f.name}
                     label={f.name}
                     max={f.max}
                     value={state.frqScores[i]}
+                    accent="accent-orange"
                     onChange={(n) =>
                       setState((p: any) => {
                         const next = [...p.frqScores];
@@ -162,32 +150,44 @@ export function ScoreCalculator({ subject }: Props) {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.05 }}
-        className="lg:col-span-2 flex flex-col gap-4"
+        className="lg:col-span-2 flex flex-col gap-4 lg:sticky lg:top-24 lg:self-start"
       >
-        <div className="rounded-3xl border border-border bg-gradient-to-br from-primary to-[oklch(0.32_0.18_270)] p-6 text-primary-foreground shadow-card sm:p-7">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium uppercase tracking-wider text-white/70">Your estimated score</span>
-            <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${bandColor[result.band]}`}>{result.band}</span>
-          </div>
-          <div className="mt-4 flex items-end gap-2">
-            <span className="text-5xl font-bold tracking-tight sm:text-6xl">{result.primary}</span>
-          </div>
-          <p className="mt-1 text-sm text-white/80">{result.secondary}</p>
-
-          <div className="mt-6">
-            <div className="flex items-center justify-between text-xs text-white/70">
-              <span>Performance</span>
-              <span><AnimatedNumber value={result.percent} decimals={0} suffix="%" /></span>
-            </div>
-            <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-white/15">
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: `${result.percent}%` }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-                className="h-full rounded-full bg-white"
+        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-[oklch(0.22_0.12_270)] via-primary to-[oklch(0.32_0.18_270)] p-6 text-primary-foreground shadow-card sm:p-7">
+          {/* Floating particles */}
+          <div className="pointer-events-none absolute inset-0 overflow-hidden">
+            {[...Array(6)].map((_, i) => (
+              <motion.span
+                key={i}
+                className="absolute h-1.5 w-1.5 rounded-full bg-white/30"
+                style={{ left: `${15 + i * 13}%`, top: `${20 + (i % 3) * 25}%` }}
+                animate={{ y: [0, -12, 0], opacity: [0.2, 0.7, 0.2] }}
+                transition={{ duration: 3 + i * 0.4, repeat: Infinity, delay: i * 0.3 }}
               />
-            </div>
+            ))}
           </div>
+
+          <div className="relative flex items-center justify-between">
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/70">
+              <Sparkles className="h-3.5 w-3.5" /> Live prediction
+            </span>
+            <AnimatePresence mode="wait">
+              <motion.span
+                key={result.band}
+                initial={{ scale: 0.85, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.85, opacity: 0 }}
+                className={`rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${band.chip}`}
+              >
+                {band.label}
+              </motion.span>
+            </AnimatePresence>
+          </div>
+
+          <div className="relative mt-4 flex items-center justify-center">
+            <RadialMeter percent={result.percent} primary={result.primary} label={subject.exam} colorVar={band.color} size={220} />
+          </div>
+
+          <p className="relative mt-4 text-center text-sm text-white/80">{result.secondary}</p>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
@@ -214,10 +214,11 @@ export function ScoreCalculator({ subject }: Props) {
                   </div>
                   <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-muted">
                     <motion.div
-                      initial={{ width: 0 }}
+                      initial={false}
                       animate={{ width: `${pct}%` }}
-                      transition={{ duration: 0.5 }}
-                      className="h-full rounded-full bg-primary"
+                      transition={{ type: "spring", stiffness: 180, damping: 24 }}
+                      className="h-full rounded-full"
+                      style={{ background: band.color }}
                     />
                   </div>
                 </li>
@@ -228,4 +229,8 @@ export function ScoreCalculator({ subject }: Props) {
       </motion.aside>
     </div>
   );
+}
+
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return <h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">{children}</h3>;
 }
