@@ -120,6 +120,33 @@ export function CategoryDirectory() {
         )}
       </main>
 
+      {/* Tools section - moved from navbar */}
+      <section className="mx-auto max-w-7xl px-4 pb-8 sm:px-6 lg:px-8">
+        <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
+          Tools
+        </h2>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {[
+            { to: "/tools/compare", label: "Compare", color: "#2563eb" },
+            { to: "/tools/college-credit", label: "College Credit", color: "#16a34a" },
+            { to: "/tools/planner", label: "Planner", color: "#ea580c" },
+            { to: "/tools/timer", label: "Timer", color: "#7c3aed" },
+          ].map((t) => (
+            <Link
+              key={t.to}
+              to={t.to}
+              className="group flex items-center justify-between rounded-2xl bg-white px-4 py-3 text-sm font-medium text-slate-800 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_4px_12px_rgba(15,23,42,0.04)] ring-1 ring-slate-100 transition hover:shadow-md"
+            >
+              <span className="flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full" style={{ backgroundColor: t.color }} />
+                {t.label}
+              </span>
+              <ChevronRight className="h-4 w-4 text-slate-300 transition group-hover:text-slate-500" />
+            </Link>
+          ))}
+        </div>
+      </section>
+
       <footer className="mx-auto max-w-7xl px-4 pb-8 pt-2 text-center text-xs text-slate-400 sm:px-6 lg:px-8">
         © {new Date().getFullYear()} ScoreLab — Estimates only.
       </footer>
