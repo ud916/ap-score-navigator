@@ -61,13 +61,6 @@ export function CategoryDirectory() {
             <span className="text-base font-bold tracking-tight">ScoreLab</span>
           </Link>
 
-          <div className="hidden items-center gap-5 text-sm font-medium text-white/70 md:flex">
-            <Link to="/tools/compare" className="hover:text-white transition">Compare</Link>
-            <Link to="/tools/college-credit" className="hover:text-white transition">Credit</Link>
-            <Link to="/tools/planner" className="hover:text-white transition">Planner</Link>
-            <Link to="/tools/timer" className="hover:text-white transition">Timer</Link>
-          </div>
-
           <button
             aria-label="Search"
             onClick={() => setSearchOpen((v) => !v)}
