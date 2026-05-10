@@ -184,7 +184,7 @@ export function ScoreCalculator({ subject }: Props) {
           </div>
 
           <div className="relative mt-4 flex items-center justify-center">
-            <RadialMeter percent={result.percent} primary={result.primary} label={subject.exam} colorVar={band.color} size={220} label={s.kind.toUpperCase()} />
+            <RadialMeter percent={result.percent} primary={result.primary} label={s.kind.toUpperCase()} colorVar={band.color} size={220} />
           </div>
 
           <p className="relative mt-4 text-center text-sm text-white/80">{result.secondary}</p>
