@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, BookOpen, Clock, ListChecks, TrendingUp } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { ScoreCalculator } from "@/components/ScoreCalculator";
-import { getSubjectBySlug } from "@/data/subjects";
+import { getSubjectBySlug, type Subject } from "@/data/subjects";
 
 export const Route = createFileRoute("/calculator/$slug")({
   loader: ({ params }) => {
@@ -33,12 +33,13 @@ export const Route = createFileRoute("/calculator/$slug")({
 });
 
 function CalculatorPage() {
-  const { subject } = Route.useLoaderData();
+  const { subject } = Route.useLoaderData() as { subject: Subject };
   const s = subject.scoring;
+  const sum = (arr: { count: number }[]) => arr.reduce((n: number, x) => n + x.count, 0);
   const totalQuestions =
     s.kind === "ap" ? s.mcq.count + s.frqs.length
-    : s.kind === "sat" ? s.sections.reduce((n, x) => n + x.count, 0)
-    : s.kind === "act" ? s.sections.reduce((n, x) => n + x.count, 0)
+    : s.kind === "sat" ? sum(s.sections)
+    : s.kind === "act" ? sum(s.sections)
     : s.mcq.count + s.frqs.length;
 
   return (
