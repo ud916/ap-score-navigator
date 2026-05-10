@@ -67,7 +67,7 @@ export function ScoreCalculator({ subject }: Props) {
                 max={s.mcq.count}
                 value={state.mcqCorrect}
                 onChange={(n) => setState((p: any) => ({ ...p, mcqCorrect: n }))}
-                accent="primary"
+                color="var(--primary)"
               />
               {s.frqs.length > 0 && (
                 <>
@@ -79,7 +79,7 @@ export function ScoreCalculator({ subject }: Props) {
                         label={f.name}
                         max={f.max}
                         value={state.frqScores[i]}
-                        accent="accent-purple"
+                        color="var(--accent-purple)"
                         onChange={(n) =>
                           setState((p: any) => {
                             const next = [...p.frqScores];
@@ -97,8 +97,8 @@ export function ScoreCalculator({ subject }: Props) {
 
           {s.kind === "sat" && (
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <ScoreSlider label="Reading & Writing correct" max={s.sections[0].count} value={state.rwCorrect} onChange={(n) => setState((p: any) => ({ ...p, rwCorrect: n }))} accent="accent-blue" />
-              <ScoreSlider label="Math correct" max={s.sections[1].count} value={state.mathCorrect} onChange={(n) => setState((p: any) => ({ ...p, mathCorrect: n }))} accent="accent-teal" />
+              <ScoreSlider label="Reading & Writing correct" max={s.sections[0].count} value={state.rwCorrect} onChange={(n) => setState((p: any) => ({ ...p, rwCorrect: n }))} color="var(--accent-blue)" />
+              <ScoreSlider label="Math correct" max={s.sections[1].count} value={state.mathCorrect} onChange={(n) => setState((p: any) => ({ ...p, mathCorrect: n }))} color="var(--accent-teal)" />
             </div>
           )}
 
@@ -111,7 +111,7 @@ export function ScoreCalculator({ subject }: Props) {
                   max={sec.count}
                   value={state[sec.id] ?? 0}
                   onChange={(n) => setState((p: any) => ({ ...p, [sec.id]: n }))}
-                  accent="accent-pink"
+                  color="var(--accent-pink)"
                 />
               ))}
             </div>
@@ -120,7 +120,7 @@ export function ScoreCalculator({ subject }: Props) {
           {s.kind === "regents" && (
             <>
               <SectionTitle>Multiple Choice</SectionTitle>
-              <ScoreSlider label="Correct answers" max={s.mcq.count} value={state.mcqCorrect} onChange={(n) => setState((p: any) => ({ ...p, mcqCorrect: n }))} accent="primary" />
+              <ScoreSlider label="Correct answers" max={s.mcq.count} value={state.mcqCorrect} onChange={(n) => setState((p: any) => ({ ...p, mcqCorrect: n }))} color="var(--primary)" />
               <SectionTitle>Free Response</SectionTitle>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 {s.frqs.map((f, i) => (
@@ -129,7 +129,7 @@ export function ScoreCalculator({ subject }: Props) {
                     label={f.name}
                     max={f.max}
                     value={state.frqScores[i]}
-                    accent="accent-orange"
+                    color="var(--accent-orange)"
                     onChange={(n) =>
                       setState((p: any) => {
                         const next = [...p.frqScores];
