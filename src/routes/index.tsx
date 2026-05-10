@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { HomePage } from "@/components/HomePage";
+import { CategoryDirectory } from "@/components/CategoryDirectory";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -35,5 +35,5 @@ export const Route = createFileRoute("/")({
       },
     ],
   }),
-  component: HomePage,
+  component: CategoryDirectory,
 });
